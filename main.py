@@ -4,6 +4,7 @@ import PySide2
 from PySide2.QtWidgets import QApplication, QPushButton, QVBoxLayout, QDialog, QLineEdit
 from PySide2.QtQuick import QQuickView
 from PySide2.QtCore import Slot
+from PySide2.QtCore import QFile
 
 class URL_Class(QDialog):
     def __init__(self, parent=None):
@@ -32,6 +33,9 @@ if __name__ == "__main__":
     view = QQuickView()
     url = URL_Class()
     view.setResizeMode(QQuickView.SizeRootObjectToView)
+    url.resize(800, 600)
+    ui = QFile("url_gui.ui")
+
     url.show()
 
     sys.exit(app.exec_())
