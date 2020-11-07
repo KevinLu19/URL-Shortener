@@ -3,8 +3,8 @@ import PySide2
 
 from PySide2.QtWidgets import QApplication, QPushButton, QVBoxLayout, QDialog, QLineEdit
 from PySide2.QtQuick import QQuickView
-from PySide2.QtCore import Slot
-from PySide2.QtCore import QFile
+from PySide2.QtCore import Slot, QFile, QIODevice
+from PySide2.QtUiTools import QUiLoader
 
 class URL_Class(QDialog):
     def __init__(self, parent=None):
@@ -30,12 +30,29 @@ class URL_Class(QDialog):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 
-    view = QQuickView()
-    url = URL_Class()
-    view.setResizeMode(QQuickView.SizeRootObjectToView)
-    url.resize(800, 600)
-    ui = QFile("url_gui.ui")
+    # view = QQuickView()
+    # url = URL_Class()
+    # view.setResizeMode(QQuickView.SizeRootObjectToView)
+    # url.resize(800, 600)
 
-    url.show()
+    ui_file = "url_gui.ui"
+
+    ui = QFile(ui_file)
+
+    if not ui.open(QIODevice.ReadOnly):
+        print (f"Cannot open {ui}: {ui.errorString()}")
+        sys.exit(1)
+
+    ui_loader = QUiLoader()
+    window_loader = ui_loader.load(ui)
+    ui.close()
+
+    if not window_loader:
+        print (ui_loader.errorString())
+        sys.exit(1)
+
+    window_loader.show()
+
+    #url.show()
 
     sys.exit(app.exec_())
