@@ -1,4 +1,5 @@
 from url_gui_file import Ui_MainWindow
+from shorten_url import URL_DB_Class
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
