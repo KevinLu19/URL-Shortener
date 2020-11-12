@@ -30,14 +30,23 @@ class Ui_MainWindow(object):
         self.groupBox.setTitle("")
         self.groupBox.setObjectName("groupBox")
         self.enter_url_label = QtWidgets.QLabel(self.groupBox)
-        self.enter_url_label.setGeometry(QtCore.QRect(40, 110, 191, 41))
+        self.enter_url_label.setGeometry(QtCore.QRect(40, 70, 191, 41))
         font = QtGui.QFont()
         font.setPointSize(20)
         self.enter_url_label.setFont(font)
         self.enter_url_label.setObjectName("enter_url_label")
         self.url_input_text = QtWidgets.QTextEdit(self.groupBox)
-        self.url_input_text.setGeometry(QtCore.QRect(290, 110, 341, 41))
+        self.url_input_text.setGeometry(QtCore.QRect(280, 70, 341, 41))
         self.url_input_text.setObjectName("url_input_text")
+        self.output_label = QtWidgets.QLabel(self.groupBox)
+        self.output_label.setGeometry(QtCore.QRect(40, 190, 191, 51))
+        font = QtGui.QFont()
+        font.setPointSize(20)
+        self.output_label.setFont(font)
+        self.output_label.setObjectName("output_label")
+        self.short_url_output = QtWidgets.QTextEdit(self.groupBox)
+        self.short_url_output.setGeometry(QtCore.QRect(280, 200, 341, 41))
+        self.short_url_output.setObjectName("short_url_output")
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(10, 40, 771, 111))
         font = QtGui.QFont()
@@ -62,6 +71,12 @@ class Ui_MainWindow(object):
         self.short_url_button.setText(_translate("MainWindow", "Shortening URL"))
         self.enter_url_label.setText(_translate("MainWindow", "Enter URL"))
         self.url_input_text.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
+        self.output_label.setText(_translate("MainWindow", "Output"))
+        self.short_url_output.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"

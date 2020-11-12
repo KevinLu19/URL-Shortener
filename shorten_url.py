@@ -4,12 +4,21 @@ import sqlite3
 import os
 import sys
 
+from urllib.request import pathname2url
+
 db_file_name = "url_storage.db"
-db_connect = sqlite3.connect(db_file_name)
+# db_connect = sqlite3.connect(db_file_name)
 # db_cur = db_connect.cursor()
 
-if db_file_name not in os.environ:
-    print ("DataBase file not found. Cannot access backend")
+# if db_file_name not in os.environ:
+#     print ("DataBase file not found. Cannot access backend")
+#     sys.exit(1)
+
+try:
+    db_uri = f"file:{pathname2url(db_file_name)}?mode=rw"
+    db_connect = sqlite3.connect(db_uri, uri=True)
+except sqlite3.OperationalError:
+    print ("DataBase file not found. Cannot access backend file. Please check error.")
     sys.exit(1)
 
 class URL_DB_Class:
