@@ -35,23 +35,24 @@ class ShortThatURL():
         new_url += self.generate_url_key()
 
         final_destination_url = "https://www.shortthaturl.com/" + new_url
-        # return final_destination_url
-
         return final_destination_url
 
 class URL_DB_Class:
     def __init__(self):
         self.db_curr = db_connect.cursor()
 
+    def set_original_user_url (self, url):
+        self.original_url = url
+
     def create_table(self):
         try:
-            self.db_curr.execute("CREATE TABLE url()")
+            self.db_curr.execute("CREATE TABLE url(short_url_key, original_url)")
         except:
             print ("Table already exists!")
             sys.exit(1)
 
-    def insert_to_table(self, item):
-        self.db_curr.execute(f"INSERT INTO url({item})")
+    def insert_to_table(self, generated_key):
+        self.db_curr.execute(f"INSERT INTO url({generated_key, self.original_url})")
 
     def comitting_changes(self):
         return self.db_curr.commit()
