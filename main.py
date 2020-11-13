@@ -21,5 +21,7 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = MainFileClass()
+    db_class = URL_DB_Class()
+
     ui.show()
     sys.exit(app.exec_())
