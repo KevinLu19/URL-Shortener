@@ -25,6 +25,7 @@ class Ui_MainWindow(object):
         font.setWeight(75)
         self.short_url_button.setFont(font)
         self.short_url_button.setObjectName("short_url_button")
+        self.short_url_button.setStyleSheet("background-color: #4F86F7")
         self.groupBox = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox.setGeometry(QtCore.QRect(10, 170, 771, 281))
         self.groupBox.setTitle("")
