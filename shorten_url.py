@@ -8,13 +8,13 @@ from urllib.request import pathname2url
 
 db_file_name = "url_storage.db"
 
-try:
-    db_uri = f"file:{pathname2url(db_file_name)}?mode=rw"
-    db_connect = sqlite3.connect(db_uri, uri=True)
+# try:
+#     db_uri = f"file:{pathname2url(db_file_name)}?mode=rw"
+#     db_connect = sqlite3.connect(db_uri, uri=True)
 
-except sqlite3.OperationalError:
-    print ("DataBase file not found. Cannot access backend file. Please check error.")
-    sys.exit(1)
+# except sqlite3.OperationalError:
+#     print ("DataBase file not found. Cannot access backend file. Please check error.")
+#     sys.exit(1)
 
 class ShortThatURL():
     def __init__(self, long_url):
@@ -41,24 +41,37 @@ class URL_DB_Class:
     def __init__(self):
         self.db_curr = db_connect.cursor()
 
+        try:
+            self.db_conn = sqlite3.connect(db_file_name)
+            print ("Connected to DataBase")
+        except sqlite3.Error as e:
+            print (e)
+        finally:
+            if self.db_conn:
+                self.db_conn.close()
+
     def set_original_user_url (self, url):
         self.original_url = url
 
-    def create_table(self):
+    def create_table (self):
         try:
-            self.db_curr.execute("CREATE TABLE url(short_url_key, original_url)")
+            self.db_curr.execute("CREATE TABLE url(id PRIMARY KEY , short_url_key text, original_url text)")
         except:
             print ("Table already exists!")
             sys.exit(1)
 
-    def insert_to_table(self, generated_key):
+    def insert_to_table (self, generated_key):
         self.db_curr.execute(f"INSERT INTO url({generated_key, self.original_url})")
+        print (f"Inserted {generated_key} into table")
 
-    def comitting_changes(self):
+    def comitting_changes (self):
         return self.db_curr.commit()
 
-    def closing_db_connection(self):
+    def closing_db_connection (self):
         return self.db_curr.close()
+
+    def print_items_from_table (self):
+        self.db_curr.execute("SELECT * FROM url")
 
 if __name__ == "__main__":
     url_db = URL_DB_Class()
