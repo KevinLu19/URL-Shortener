@@ -7,7 +7,7 @@ import sys
 
 # url_gui_file.py generated via command
 # pyuic5 -x <.ui file> -o <output_file.py>
-
+# git rm --cached .vscode/settings.json
 class MainFileClass(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self):
         super(MainFileClass, self).__init__()

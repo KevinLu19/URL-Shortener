@@ -6,7 +6,7 @@ import sys
 
 from urllib.request import pathname2url
 
-db_file_name = "url_storage.db"
+# db_file_name = "url_storage.db"
 
 # try:
 #     db_uri = f"file:{pathname2url(db_file_name)}?mode=rw"
@@ -39,42 +39,96 @@ class ShortThatURL():
 
 class URL_DB_Class:
     def __init__(self):
-        self.db_curr = db_connect.cursor()
+        # self.__db_curr = db_connect.cursor()
+        self.__db_file_name = "url_storage.db"
+        self.__original_url = ""
+        self.__sql_create_table = """CREATE TABLE IF NOT EXISTS url (
+                                        short_url_key text,
+                                        original_url text);"""
+
+        self.connection = self.__create_connection_database()
+
+        if self.connection is not None:
+            self.__create_table(self.connection, self.__sql_create_table)
+
+        # try:
+        #     self.db_conn = sqlite3.connect(self.__db_file_name)
+        #     print ("Connected to DataBase")
+        # except sqlite3.Error as e:
+        #     print (e)
+        # finally:
+        #     if self.db_conn:
+        #         self.db_conn.close()
+
+        # if self.db_conn is not None:
+        #     self.__create_table (self.__sql_create_table)
+        # else:
+        #     print ("Cannot create table in database!")
+
+    def __create_connection_database (self):
+        self.__db_connect = None
 
         try:
-            self.db_conn = sqlite3.connect(db_file_name)
-            print ("Connected to DataBase")
+            self.__db_connect = sqlite3.connect(self.__db_file_name)
+            self.__db_cursor = self.__db_connect.cursor()
+            return self.__db_connect
+
+        except sqlite3.Error as e:
+            print ("Connection to database failed!")
+            print (e)
+
+        # self.__create_table(self.__sql_create_table)
+        # if self.__db_connect is not None:
+        #     self.__create_table (self.__sql_create_table)
+
+        return self.__db_connect
+
+    def __create_table (self, db_cursor, sql_command):
+        # connection = self.__create_connection_database()
+
+        # if connection is not None:
+        #     # self.__db_cursor = self.__db_connect.cursor()
+        #     self.__db_cursor.execute(sql_command)
+
+        try:
+            cursor = db_cursor.cursor()
+            cursor.execute(sql_command)
+
         except sqlite3.Error as e:
             print (e)
-        finally:
-            if self.db_conn:
-                self.db_conn.close()
+
+        # try:
+        #     self.__db_curr.execute(sql_command)
+        # except sqlite3.Error as e:
+        #     print ("Table already exists!")
+        #     print (e)
+        #     sys.exit(1)
 
     def set_original_user_url (self, url):
-        self.original_url = url
+            self.__original_url = url
 
-    def create_table (self):
-        try:
-            self.db_curr.execute("CREATE TABLE url(id PRIMARY KEY , short_url_key text, original_url text)")
-        except:
-            print ("Table already exists!")
-            sys.exit(1)
+    def insert_to_table (self, generated_key, original_url):
+        sql_key = 1
 
-    def insert_to_table (self, generated_key):
-        self.db_curr.execute(f"INSERT INTO url({generated_key, self.original_url})")
+        # sql_insert_command = "INSERT INTO url (id, short_url_key, original_url) VALUES(?,?,?)"
+
+        #self.connection.execute(f"INSERT INTO url VALUES ({sql_key}, {generated_key}, {original_url})")
+        self.connection.execute(f"INSERT INTO url (short_url_key, original_url) VALUES({generated_key},{original_url})")
+
+        self.connection.commit()
+        self.connection.close()
+
         print (f"Inserted {generated_key} into table")
-
-    def comitting_changes (self):
-        return self.db_curr.commit()
-
-    def closing_db_connection (self):
-        return self.db_curr.close()
+        sql_key += 1
 
     def print_items_from_table (self):
-        self.db_curr.execute("SELECT * FROM url")
+        self.__db_cursor.execute("SELECT * FROM url")
 
 if __name__ == "__main__":
     url_db = URL_DB_Class()
-    sample_url = "https://www.github.com/KevinLu19"
-    short_url = ShortThatURL(sample_url)
-    print(short_url.final_url())
+    url_db.insert_to_table("km7NS", str('www.google.com'))
+    url_db.comitting_changes()
+
+    # sample_url = "https://www.github.com/KevinLu19"
+    # short_url = ShortThatURL(sample_url)
+    # print(short_url.final_url())
