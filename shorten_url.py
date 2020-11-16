@@ -51,20 +51,6 @@ class URL_DB_Class:
         if self.connection is not None:
             self.__create_table(self.connection, self.__sql_create_table)
 
-        # try:
-        #     self.db_conn = sqlite3.connect(self.__db_file_name)
-        #     print ("Connected to DataBase")
-        # except sqlite3.Error as e:
-        #     print (e)
-        # finally:
-        #     if self.db_conn:
-        #         self.db_conn.close()
-
-        # if self.db_conn is not None:
-        #     self.__create_table (self.__sql_create_table)
-        # else:
-        #     print ("Cannot create table in database!")
-
     def __create_connection_database (self):
         self.__db_connect = None
 
@@ -77,32 +63,16 @@ class URL_DB_Class:
             print ("Connection to database failed!")
             print (e)
 
-        # self.__create_table(self.__sql_create_table)
-        # if self.__db_connect is not None:
-        #     self.__create_table (self.__sql_create_table)
-
         return self.__db_connect
 
     def __create_table (self, db_cursor, sql_command):
-        # connection = self.__create_connection_database()
-
-        # if connection is not None:
-        #     # self.__db_cursor = self.__db_connect.cursor()
-        #     self.__db_cursor.execute(sql_command)
-
         try:
             cursor = db_cursor.cursor()
             cursor.execute(sql_command)
 
         except sqlite3.Error as e:
             print (e)
-
-        # try:
-        #     self.__db_curr.execute(sql_command)
-        # except sqlite3.Error as e:
-        #     print ("Table already exists!")
-        #     print (e)
-        #     sys.exit(1)
+            print ("Table already exists!")
 
     def set_original_user_url (self, url):
             self.__original_url = url
@@ -110,10 +80,18 @@ class URL_DB_Class:
     def insert_to_table (self, generated_key, original_url):
         sql_key = 1
 
-        # sql_insert_command = "INSERT INTO url (id, short_url_key, original_url) VALUES(?,?,?)"
+        db_cursor = self.connection.cursor()
 
-        #self.connection.execute(f"INSERT INTO url VALUES ({sql_key}, {generated_key}, {original_url})")
-        self.connection.execute(f"INSERT INTO url (short_url_key, original_url) VALUES({generated_key},{original_url})")
+        # self.connection.execute ("INSERT INTO url VALUES ('1','km7NS', 'www.google.com')")
+        # self.connection.execute("SELECT * FROM url")
+        # print (self.connection.fetchone())
+
+        # self.connection.commit()
+        # self.connection.close()
+
+        db_cursor.execute (f"INSERT INTO url VALUES ('{generated_key}','{original_url}')")
+        db_cursor.execute ("SELECT * FROM url")
+        print (db_cursor.fetchone())
 
         self.connection.commit()
         self.connection.close()
@@ -127,7 +105,6 @@ class URL_DB_Class:
 if __name__ == "__main__":
     url_db = URL_DB_Class()
     url_db.insert_to_table("km7NS", str('www.google.com'))
-    url_db.comitting_changes()
 
     # sample_url = "https://www.github.com/KevinLu19"
     # short_url = ShortThatURL(sample_url)
