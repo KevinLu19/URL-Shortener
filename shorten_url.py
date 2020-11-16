@@ -45,6 +45,7 @@ class URL_DB_Class:
         self.__sql_create_table = """CREATE TABLE IF NOT EXISTS url (
                                         short_url_key text,
                                         original_url text);"""
+        self.__sql_delete_row = """DELETE FROM url WHERE short_url_key = """
 
         self.connection = self.__create_connection_database()
 
@@ -74,6 +75,18 @@ class URL_DB_Class:
             print (e)
             print ("Table already exists!")
 
+    def __clear_table (self):
+        db_cursor = self.connection.cursor()
+
+        try:
+            db_cursor.execute ("DROP TABLE url")
+            print ("Table have been deleted!")
+
+            self.connection.commit()
+            self.connection.close()
+        except sqlite3.Error as e:
+            print (e)
+
     def set_original_user_url (self, url):
             self.__original_url = url
 
@@ -90,8 +103,9 @@ class URL_DB_Class:
         # self.connection.close()
 
         db_cursor.execute (f"INSERT INTO url VALUES ('{generated_key}','{original_url}')")
-        db_cursor.execute ("SELECT * FROM url")
-        print (db_cursor.fetchone())
+        print (f"{generated_key} and {original_url} have been added to the table!")
+        self.print_items_from_table()
+        # print (db_cursor.fetchone())
 
         self.connection.commit()
         self.connection.close()
@@ -99,8 +113,20 @@ class URL_DB_Class:
         print (f"Inserted {generated_key} into table")
         sql_key += 1
 
+    def delete_row (self, generated_key):
+        complete_sql_command = self.__sql_delete_row + f" {generated_key}"
+
+        db_cursor = self.connection.cursor()
+        db_cursor.execute (complete_sql_command)
+
+        self.connection.commit()
+        self.connection.close()
+
     def print_items_from_table (self):
-        self.__db_cursor.execute("SELECT * FROM url")
+        db_cursor = self.connection.cursor()
+
+        db_cursor.execute("SELECT * FROM url")
+        db_cursor.close()
 
 if __name__ == "__main__":
     url_db = URL_DB_Class()
