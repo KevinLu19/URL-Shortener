@@ -14,6 +14,7 @@ class MainFileClass(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.short_url_button.clicked.connect(self.send_user_url)
         self.setWindowTitle("Short That URL")
+
         self.__url_db = URL_DB_Class()
 
     def send_user_url (self):

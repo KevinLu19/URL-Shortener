@@ -44,46 +44,54 @@ class URL_DB_Class:
         self.__original_url = ""
         self.__sql_create_table = """CREATE TABLE IF NOT EXISTS url (
                                         short_url_key text,
-                                        original_url text);"""
+                                        original_url text
+                                        );"""
+
         self.__sql_delete_row = """DELETE FROM url WHERE short_url_key = """
 
-        self.connection = self.__create_connection_database()
+        # self.connection = self.__create_connection_database()
 
-        if self.connection is not None:
-            self.__create_table(self.connection, self.__sql_create_table)
+        # if self.connection is not None:
+        #     self.__create_table(self.connection, self.__sql_create_table)
 
-    def __create_connection_database (self):
-        self.__db_connect = None
+        # self.__db_connect = None
+        # try:
+        #     self.__db_connect = sqlite3.connect(self.__db_file_name)
+        #     self.__db_cursor = self.__db_connect.cursor()
 
-        try:
-            self.__db_connect = sqlite3.connect(self.__db_file_name)
-            self.__db_cursor = self.__db_connect.cursor()
-            return self.__db_connect
+        # except sqlite3.Error as e:
+        #     print ("Connection to database failed!")
+        #     print (e)
 
-        except sqlite3.Error as e:
-            print ("Connection to database failed!")
-            print (e)
+        self.__db_connect = sqlite3.connect(self.__db_file_name)
+        self.__db_cursor = self.__db_connect.cursor()
 
-        return self.__db_connect
+        self.__create_table (self.__db_cursor, self.__sql_create_table)
+
+    def __del__(self):
+        self.__db_connect.close()
 
     def __create_table (self, db_cursor, sql_command):
         try:
-            cursor = db_cursor.cursor()
-            cursor.execute(sql_command)
+            self.__db_cursor.execute(sql_command)
+            print ("------------")
+            print ("Table successfully created!")
+            print ("------------")
 
         except sqlite3.Error as e:
             print (e)
             print ("Table already exists!")
 
     def __clear_table (self):
-        db_cursor = self.connection.cursor()
-
         try:
-            db_cursor.execute ("DROP TABLE url")
+            # db_cursor.execute ("DROP TABLE url")
+            self.__db_cursor.execute ("DROP TABLE url")
+            print ("------------")
             print ("Table have been deleted!")
+            print ("------------")
 
-            self.connection.commit()
-            self.connection.close()
+            self.__db_connect.commit()
+            self.__db_connect.close()
         except sqlite3.Error as e:
             print (e)
 
@@ -91,27 +99,15 @@ class URL_DB_Class:
             self.__original_url = url
 
     def insert_to_table (self, generated_key, original_url):
-        sql_key = 1
-
-        db_cursor = self.connection.cursor()
-
-        # self.connection.execute ("INSERT INTO url VALUES ('1','km7NS', 'www.google.com')")
-        # self.connection.execute("SELECT * FROM url")
-        # print (self.connection.fetchone())
-
-        # self.connection.commit()
-        # self.connection.close()
-
-        db_cursor.execute (f"INSERT INTO url VALUES ('{generated_key}','{original_url}')")
+        self.__db_cursor.execute (f"INSERT INTO url VALUES ('{generated_key}','{original_url}')")
         print (f"{generated_key} and {original_url} have been added to the table!")
-        self.print_items_from_table()
+        #self.print_items_from_table()
         # print (db_cursor.fetchone())
 
-        self.connection.commit()
-        self.connection.close()
+        self.__db_connect.commit()
+        self.__db_connect.close()
 
         print (f"Inserted {generated_key} into table")
-        sql_key += 1
 
     def delete_row (self, generated_key):
         complete_sql_command = self.__sql_delete_row + f" {generated_key}"
@@ -123,14 +119,13 @@ class URL_DB_Class:
         self.connection.close()
 
     def print_items_from_table (self):
-        db_cursor = self.connection.cursor()
-
-        db_cursor.execute("SELECT * FROM url")
-        db_cursor.close()
+        self.__db_cursor.execute("SELECT * FROM url")
+        self.__db_cursor.close()
 
 if __name__ == "__main__":
     url_db = URL_DB_Class()
-    url_db.insert_to_table("km7NS", str('www.google.com'))
+    # url_db.clear_table()
+    url_db.insert_to_table("km7NS", 'www.google.com')
 
     # sample_url = "https://www.github.com/KevinLu19"
     # short_url = ShortThatURL(sample_url)
