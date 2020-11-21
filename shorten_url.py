@@ -98,6 +98,9 @@ class URL_DB_Class:
     def set_original_user_url (self, url):
             self.__original_url = url
 
+    def print_original_url (self):
+        print (f"The original url is: {self.__original_url}")
+
     def insert_to_table (self, generated_key, original_url):
         self.__db_cursor.execute (f"INSERT INTO url VALUES ('{generated_key}','{original_url}')")
         print (f"{generated_key} and {original_url} have been added to the table!")
