@@ -114,8 +114,14 @@
        <pointsize>20</pointsize>
       </font>
      </property>
+     <property name="inputMask">
+      <string/>
+     </property>
      <property name="text">
       <string/>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
      </property>
     </widget>
    </widget>
