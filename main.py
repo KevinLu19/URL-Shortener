@@ -16,10 +16,15 @@ class MainFileClass(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setWindowTitle("Short That URL")
 
         self.__url_db = URL_DB_Class()
-
+        self.set_shorten_url_line_edit()
     def send_user_url (self):
-        qt_url_text_edit = self.url_input_text.toPlainText()
+        qt_url_text_edit = self.url_input_text.displayText()
         self.__url_db.set_original_user_url(qt_url_text_edit)
+        self.__url_db.print_original_url()
+
+    def set_shorten_url_line_edit (self):
+        self.short_url_output.setText("Temporary Text here")
+
 
     # def temporary_button(self):
     #     print ("Temproary button function connection.")
