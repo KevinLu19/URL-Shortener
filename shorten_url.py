@@ -19,6 +19,7 @@ from urllib.request import pathname2url
 class ShortThatURL():
     def __init__(self, long_url):
         self.original_url = long_url
+        self.uri_key = ""
 
     def generate_url_key(self):
         char = string.ascii_letters
@@ -28,20 +29,22 @@ class ShortThatURL():
         for letters in range (7):
             joined_url_key_string += random.choice(char)
 
+        self.uri_key += joined_url_key_string
+
         return joined_url_key_string
 
     def final_url(self):
-        new_url = ""
-        new_url += self.generate_url_key()
+        # new_url = ""
+        # new_url += self.generate_url_key()
 
-        final_destination_url = "https://www.shortthaturl.com/" + new_url
+        final_destination_url = "https://www.shortthaturl.com/" + self.uri_key
         return final_destination_url
 
 class URL_DB_Class:
     def __init__(self):
         # self.__db_curr = db_connect.cursor()
         self.__db_file_name = "url_storage.db"
-        self.__original_url = ""
+        self._original_url = ""
         self.__sql_create_table = """CREATE TABLE IF NOT EXISTS url (
                                         short_url_key text,
                                         original_url text
@@ -49,24 +52,10 @@ class URL_DB_Class:
 
         self.__sql_delete_row = """DELETE FROM url WHERE short_url_key = """
 
-        # self.connection = self.__create_connection_database()
-
-        # if self.connection is not None:
-        #     self.__create_table(self.connection, self.__sql_create_table)
-
-        # self.__db_connect = None
-        # try:
-        #     self.__db_connect = sqlite3.connect(self.__db_file_name)
-        #     self.__db_cursor = self.__db_connect.cursor()
-
-        # except sqlite3.Error as e:
-        #     print ("Connection to database failed!")
-        #     print (e)
-
         self.__db_connect = sqlite3.connect(self.__db_file_name)
         self.__db_cursor = self.__db_connect.cursor()
-
         self.__create_table (self.__db_cursor, self.__sql_create_table)
+        self._one_url_list = []
 
     def __del__(self):
         self.__db_connect.close()
@@ -96,21 +85,48 @@ class URL_DB_Class:
             print (e)
 
     def set_original_user_url (self, url):
-            self.__original_url = url
+        self._original_url = url
+
+    def check_original_url (self):
+        if self._original_url is not None:
+            pass
+        else:
+            print ("Your entered url is invalid.")
 
     def print_original_url (self):
-        print (f"The original url is: {self.__original_url}")
+        print (f"The original url is: {self._original_url}")
 
-    def insert_to_table (self, generated_key, original_url):
-        self.__db_cursor.execute (f"INSERT INTO url VALUES ('{generated_key}','{original_url}')")
-        print (f"{generated_key} and {original_url} have been added to the table!")
-        #self.print_items_from_table()
-        # print (db_cursor.fetchone())
+    def url_to_list (self):
+        short_url_class = ShortThatURL(self._original_url)
+        url_key = short_url_class.generate_url_key()
+        complete_url = short_url_class.final_url()
+
+        # self._one_url_list.append(url_key, self._original_url, complete_url)
+        self._one_url_list.extend((url_key, self._original_url, complete_url))
+
+        self.insert_to_table()
+
+    # def insert_to_table (self, generated_key, original_url):
+    #     self.__db_cursor.execute (f"INSERT INTO url VALUES ('{generated_key}','{original_url}')")
+    #     print (f"{generated_key} and {original_url} have been added to the table!")
+    #     #self.print_items_from_table()
+    #     # print (db_cursor.fetchone())
+
+    #     self.__db_connect.commit()
+    #     self.__db_connect.close()
+
+    #     print (f"Inserted {generated_key} into table")
+
+    def insert_to_table (self):
+        generated_key = self._one_url_list[0]
+        original_key = self._one_url_list[1]
+        completed_url = self._one_url_list[2]
+
+        self.__db_cursor.execute (f"INSERT INTO url VALUES ('{generated_key}', '{original_key}')")
+        print (f"{generated_key} and {original_key} have been added to the table! The final url is {completed_url}")
 
         self.__db_connect.commit()
         self.__db_connect.close()
-
-        print (f"Inserted {generated_key} into table")
 
     def delete_row (self, generated_key):
         complete_sql_command = self.__sql_delete_row + f" {generated_key}"

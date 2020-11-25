@@ -17,9 +17,12 @@ class MainFileClass(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.__url_db = URL_DB_Class()
         self.set_shorten_url_line_edit()
+
     def send_user_url (self):
         qt_url_text_edit = self.url_input_text.displayText()
-        self.__url_db.set_original_user_url(qt_url_text_edit)
+        url_to_back_end = self.__url_db.set_original_user_url(qt_url_text_edit)
+        self.__url_db.url_to_list()
+
         self.__url_db.print_original_url()
 
     def set_shorten_url_line_edit (self):
