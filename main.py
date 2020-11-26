@@ -23,11 +23,17 @@ class MainFileClass(QtWidgets.QMainWindow, Ui_MainWindow):
         url_to_back_end = self.__url_db.set_original_user_url(qt_url_text_edit)
         self.__url_db.url_to_list()
 
+        self.set_shorten_url_line_edit(qt_url_text_edit)
+
         self.__url_db.print_original_url()
 
     def set_shorten_url_line_edit (self):
-        self.short_url_output.setText("Temporary Text here")
-
+        if self.url_input_text.text():
+            qt_url_text_edit = self.url_input_text.displayText()
+            complete_shorten_url = self.__url_db.get_complete_url(qt_url_text_edit)
+            self.short_url_output.setText(str({complete_shorten_url}))
+        else:
+            self.short_url_output.setText("")
 
     # def temporary_button(self):
     #     print ("Temproary button function connection.")
