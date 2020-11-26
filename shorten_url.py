@@ -39,7 +39,6 @@ class ShortThatURL():
 
         final_destination_url = "https://www.shortthaturl.com/" + self.uri_key
         return final_destination_url
-
 class URL_DB_Class:
     def __init__(self):
         # self.__db_curr = db_connect.cursor()
@@ -73,7 +72,6 @@ class URL_DB_Class:
 
     def __clear_table (self):
         try:
-            # db_cursor.execute ("DROP TABLE url")
             self.__db_cursor.execute ("DROP TABLE url")
             print ("------------")
             print ("Table have been deleted!")
@@ -106,16 +104,17 @@ class URL_DB_Class:
 
         self.insert_to_table()
 
-    # def insert_to_table (self, generated_key, original_url):
-    #     self.__db_cursor.execute (f"INSERT INTO url VALUES ('{generated_key}','{original_url}')")
-    #     print (f"{generated_key} and {original_url} have been added to the table!")
-    #     #self.print_items_from_table()
-    #     # print (db_cursor.fetchone())
+    def get_complete_url (self, original_url):
+        self._sql_return_column = f"SELECT short_url_key from url WHERE original_url LIKE '{original_url}' ;"
+        return_key_from_db = self.__db_cursor.execute (self._sql_return_column)
+        print (f"Successfully found {original_url} from table.")
 
-    #     self.__db_connect.commit()
-    #     self.__db_connect.close()
+        self.__db_connect.commit()
+        self.__db_connect.close()
 
-    #     print (f"Inserted {generated_key} into table")
+        complete_uri_link = "https://www.shortthaturl.com/" + str(return_key_from_db)
+
+        return complete_uri_link
 
     def insert_to_table (self):
         generated_key = self._one_url_list[0]
@@ -136,10 +135,6 @@ class URL_DB_Class:
 
         self.connection.commit()
         self.connection.close()
-
-    def print_items_from_table (self):
-        self.__db_cursor.execute("SELECT * FROM url")
-        self.__db_cursor.close()
 
 if __name__ == "__main__":
     url_db = URL_DB_Class()
