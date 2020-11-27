@@ -105,16 +105,19 @@ class URL_DB_Class:
         self.insert_to_table()
 
     def get_complete_url (self, original_url):
-        self._sql_return_column = f"SELECT short_url_key from url WHERE original_url LIKE '{original_url}' ;"
-        return_key_from_db = self.__db_cursor.execute (self._sql_return_column)
-        print (f"Successfully found {original_url} from table.")
+        # self._sql_return_column = f"SELECT short_url_key from url WHERE original_url LIKE '{original_url}' ;"
+        # return_key_from_db = self.__db_cursor.execute (self._sql_return_column)
+        # print (f"Successfully found {original_url} from table.")
 
-        self.__db_connect.commit()
-        self.__db_connect.close()
+        # self.__db_connect.commit()
+        # self.__db_connect.close()
 
-        complete_uri_link = "https://www.shortthaturl.com/" + str(return_key_from_db)
+        # complete_uri_link = "https://www.shortthaturl.com/" + str(return_key_from_db)
 
-        return complete_uri_link
+        complete_uri_link = self._one_url_list[2]
+        complete_url = "https://www.shortthaturl.com/" + complete_uri_link
+
+        return complete_url
 
     def insert_to_table (self):
         generated_key = self._one_url_list[0]
@@ -139,7 +142,8 @@ class URL_DB_Class:
 if __name__ == "__main__":
     url_db = URL_DB_Class()
     # url_db.clear_table()
-    url_db.insert_to_table("km7NS", 'www.google.com')
+    url_db.get_complete_url("www.google.com")
+    # url_db.insert_to_table("km7NS", 'www.google.com')
 
     # sample_url = "https://www.github.com/KevinLu19"
     # short_url = ShortThatURL(sample_url)
