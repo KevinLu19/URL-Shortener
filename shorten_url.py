@@ -37,7 +37,7 @@ class ShortThatURL():
         # new_url = ""
         # new_url += self.generate_url_key()
 
-        final_destination_url = "https://www.shortthaturl.com/" + self.uri_key
+        final_destination_url = "localhost:8000" + self.uri_key
         return final_destination_url
 class URL_DB_Class:
     def __init__(self):
@@ -105,19 +105,10 @@ class URL_DB_Class:
         self.insert_to_table()
 
     def get_complete_url (self, original_url):
-        # self._sql_return_column = f"SELECT short_url_key from url WHERE original_url LIKE '{original_url}' ;"
-        # return_key_from_db = self.__db_cursor.execute (self._sql_return_column)
-        # print (f"Successfully found {original_url} from table.")
-
-        # self.__db_connect.commit()
-        # self.__db_connect.close()
-
-        # complete_uri_link = "https://www.shortthaturl.com/" + str(return_key_from_db)
-
         complete_uri_link = self._one_url_list[2]
-        complete_url = "https://www.shortthaturl.com/" + complete_uri_link
+        # complete_url = "localhost:8080" + complete_uri_link
 
-        return complete_url
+        return complete_uri_link
 
     def insert_to_table (self):
         generated_key = self._one_url_list[0]
@@ -138,6 +129,9 @@ class URL_DB_Class:
 
         self.connection.commit()
         self.connection.close()
+
+    def remove_duplicate_entries (self):
+        pass
 
 if __name__ == "__main__":
     url_db = URL_DB_Class()
